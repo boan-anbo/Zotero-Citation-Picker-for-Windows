@@ -2,7 +2,7 @@
 
 > An AHK-based windows application to search, pick, and insert Zotero citations.
 
-![](img\readme_icon.png)
+![](img/readme_icon.png)
 
 
 
@@ -27,9 +27,9 @@ Windows:
 ## Usage
 
 1. Choose settings when ran for the first time.
-![](img\settings.png)
+![](img/settings.png)
 3. Use keyboard shortcut to call out Zotero Quick Format Citation window.
-![](img\look_up.png)
+![](img/look_up.png)
 4. Search and pick your citation.
 5. Insert the citation(s) into the current active window or save to clipboard.
 5. Hover or right click the tray icon for more.
