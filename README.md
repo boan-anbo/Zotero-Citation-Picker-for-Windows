@@ -27,6 +27,7 @@ Windows:
 ## Usage
 
 1. Choose settings when ran for the first time.
+
 ![](img/settings.png)
 3. Use keyboard shortcut to call out Zotero Quick Format Citation window.
 ![](img/look_up.png)
