@@ -1,19 +1,16 @@
 #NoEnv
 ; Menu, Tray, Icon, ZoteroWinPicker.ico
 #Persistent 
-; SetTimer, getRef, 100
-; SetTimer, activePicker, 200
 Menu, Tray, NoStandard 
+Menu, Tray, Add, Restart, reload
+Menu, Tray, Add
 Menu, Tray, Add, Zotero Picker Settings, openSettings  
-Menu, Tray, Add, , ;
+Menu, Tray, Add 
 Menu, Tray, Add, About, about
 Menu, Tray, Add
 Menu, Tray, Add, Exit, exit
-Menu, Tray, Add, Reload, reload1
 
-reload1(){
-    reload
-}
+
 iniFileName = ZoteroWinPicker.ini
 pickerWindowTitle = Quick Format Citation
 formatOptions := {"Latex":"latex","Biblatex":"biblatex","MultiMarkdown":"mmd","Pandoc":"pandoc","Zotero ODF Scan":"scannable-cite","Formatted Zotero Quick Citation":"formatted-citation","Formatted Zotero Quick Bibliography":"formatted-bibliography","JSON":"json"}
@@ -24,10 +21,10 @@ IfNotExist, %iniFileName%
     {
     MsgBox, ,Zotero Windows Picker, 
     (
-        Initialize Settings
+        Initialial Settings
     )
-    currentFormat := "Zotero ODF Scan"
-    currentShortcut := "^!F"
+    currentFormat := "Formatted Zotero Quick Bibliography"
+    currentShortcut := "+!F"
     locatorCheck := 1
     insertCheck := 1
     notificationCheck := 1
@@ -200,10 +197,6 @@ formatResult(r) {
 }
 return
 
-exit() {
-    ExitApp
-}
-
 About() {
     MsgBox, , Zotero Windows Picker 0.9,
     (
@@ -212,6 +205,7 @@ Requirement:
     1. Zotero For Window
     2. Better BibTeX for Zotero
     3. RTF/ODF Scan for Zotero (for ODF format, optional)
+
 
 Bo An
 2019
@@ -276,7 +270,7 @@ openSettings(){
 
     ; GUI for Settings
     Gui, Add, Text, w75 y10  , Hotkey:
-    Gui, Add, Checkbox, w65 x+25 vctrlCheck %checkCtrl% , Ctrl 
+    Gui, Add, Checkbox, w65 x+15 vctrlCheck %checkCtrl% , Ctrl 
     
     Gui, Add, Checkbox, w65 x+1 vshiftCheck %checkShift% , Shift
     
@@ -288,38 +282,34 @@ openSettings(){
 
     Gui, Add, Text, x10, 
 
-    Gui, Add, Text, w75 x10, Format:
+    Gui, Add, Text, w75 x10, Citation Format:
 
-    Gui, Add, DropDownList, w180 x+25 vchosenFormat %checkFormat% , %formatOptionList%
-    Gui, Add, Link, x+10, See <a href="https://retorque.re/zotero-better-bibtex/citing/cayw/">Better BibTex Documentation</a> for details.
+    Gui, Add, DropDownList, w200 x+25 vchosenFormat %checkFormat% , %formatOptionList%
+
+    Gui, Add, Link, x110, * Use the ODT format if you want link and update your citations with Zotero. 
+    Gui, Add, Link, x110, * For details of different formats, see <a href="https://retorque.re/zotero-better-bibtex/citing/cayw/">Better BibTex documentation</a>.
 
     Gui, Add, Text, x10, 
 
     Gui, Add, Text, w75 x10, Zotero ODT Scan:
-    Gui, Add, Checkbox, x+25 vlocatorCheck %checkLocator%, Input Locator Information (add informations like pages etc during insertion) 
-    
+    Gui, Add, Checkbox, x+15 vlocatorCheck %checkLocator%, Input Locator Information (add informations like pages etc during insertion) 
+    Gui, Add, Link, x110, * For detailed Zotero ODT Scan instructions, see <a href="https://zotero-odf-scan.github.io/zotero-odf-scan/">the Add-on website</a> 
+
     Gui, Add, Text, x10, 
 
     Gui, Add, Text, w75 x10, Export:
-    Gui, Add, Checkbox, x+25 vinsertCheck %checkInsert%, Automatically Insert Citations (uncheck to save to clipboard only)
+    Gui, Add, Checkbox, x+15 vinsertCheck %checkInsert%, Automatically Insert Citations (uncheck to save to clipboard only)
 
     Gui, Add, Text, x10, 
 
     Gui, Add, Text, w75 x10, Notification:
-    Gui, Add, Checkbox, x+25 vnotificationCheck %checkNotification%, Show Notification
+    Gui, Add, Checkbox, x+15 vnotificationCheck %checkNotification%, Show Notification
     
     Gui, Add, Text, x10, 
 
-    Gui, Add, Text, x10, * Zotero Format Picker window might hide in the background when called for the first time.
-
-    Gui, Add, Link, x10, * For Zotero ODT Scan instructions, see: <a href="https://zotero-odf-scan.github.io/zotero-odf-scan/">here.</a> 
-
-    Gui, Add, Text, x10, 
-
-
     Gui, Add, Button, w160 default, Save
     Gui, Add, Button, w140 x+10, Cancel
-
+    Gui, Add, Link, x+10 w130 Right, v0.9 by Bo An via <a href="https://www.autohotkey.com">AHK</a>.
 
 
     Gui, Show,, Zotero Windows Picker Settings
@@ -346,7 +336,7 @@ openSettings(){
     IniWrite, %locatorCheck%, %iniFileName%, Settings, locatorCheck
     IniWrite, %insertCheck%, %iniFileName%, Settings, insertCheck
     IniWrite, %notificationCheck%, %iniFileName%, Settings, notificationCheck
-    MsgBox, Settings Saved.
+    MsgBox, Settings Saved
     Reload
 }
 
@@ -369,4 +359,12 @@ Static RunAtScriptExecution2 := OnMessage(SH_MsgNum, Func(This_Func_Name), 1000)
         }
         }
 	}
+}
+
+reload(){
+    reload
+}
+
+exit() {
+    ExitApp
 }
