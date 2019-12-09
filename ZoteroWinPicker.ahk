@@ -1,13 +1,19 @@
 #NoEnv
 ; Menu, Tray, Icon, ZoteroWinPicker.ico
 #Persistent 
+; SetTimer, getRef, 100
+; SetTimer, activePicker, 200
 Menu, Tray, NoStandard 
 Menu, Tray, Add, Zotero Picker Settings, openSettings  
 Menu, Tray, Add, , ;
 Menu, Tray, Add, About, about
 Menu, Tray, Add
 Menu, Tray, Add, Exit, exit
+Menu, Tray, Add, Reload, reload1
 
+reload1(){
+    reload
+}
 iniFileName = ZoteroWinPicker.ini
 pickerWindowTitle = Quick Format Citation
 formatOptions := {"Latex":"latex","Biblatex":"biblatex","MultiMarkdown":"mmd","Pandoc":"pandoc","Zotero ODF Scan":"scannable-cite","Formatted Zotero Quick Citation":"formatted-citation","Formatted Zotero Quick Bibliography":"formatted-bibliography","JSON":"json"}
@@ -26,11 +32,8 @@ IfNotExist, %iniFileName%
     insertCheck := 1
     notificationCheck := 1
     openSettings()
-
-
     } else {
     readIni()
-
     }
 
 if (currentFormat = "Zotero ODF Scan")
@@ -46,45 +49,75 @@ Menu, Tray, Tip , Format:`n     %currentFormat%`n`nShortcut:`n      %formatedSho
 currentFormatString := "format=" . formatOptions[currentFormat]
 requestString := "http://127.0.0.1:23119/better-bibtex/cayw?" . currentFormatString
 Hotkey, %currentShortcut%, getRef
-
-
 return
 
 getRef:
 global tempClipboard := Clipboard
+Clipboard := ""
 IfWinNotExist, ahk_exe zotero.exe
 {
     MsgBox, , Zotero Not Found, Please Launch Zotero for Windows First.
     Return
 }
 WinGetActiveTitle, activeWindow
-Clipboard := ""
 req := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-req.Open("GET", requestString, false)
+; req := ComObjCreate("Msxml2.ServerXMLHTTP")
+req.Open("GET", requestString, true)
 req.SetRequestHeader("Content-Type", "application/json")
 try 
-{
+{    
 req.Send()
+req.WaitForResponse()
 } catch {
-    MsgBox, , Error,"Failed to Connect. Check the Settings for Zotero for Windows and Better BibTeX."
     WinClose, %pickerWindowTitle%
     return
 }
-IfWinExist, %pickerWindowTitle%
-    WinActivate, %pickerWindowTitle%
-    WinSet, AlwaysOnTop, ON, %pickerWindowTitle%
-
-req.WaitForResponse(5)
 if (!req.ResponseText){
     return
 }
-if (InStr(req.ResponseText, "CAYW failed: Error:")) {
+if (InStr(req.ResponseText, "CAYW failed: Error: scannable-cite")) {
     errorMessage := req.ResponseText 
     MsgBox,, Error,
     (
-To use formatted citation, set Zotero default quick-copy format to a citation style first.
+
+To use ODF format, you need to install "RTF/ODF Scan for Zotero" plugin.
+
+See: https://zotero-odf-scan.github.io/zotero-odf-scan/
+
+To switch to other formats, go to Settings.
+
 
 Error Message: %errorMessage%
+
+    )
+    return
+} else if (InStr(req.ResponseText, "CAYW failed: Error: formatted")) {
+    errorMessage := req.ResponseText 
+    MsgBox,, Error,
+    (
+
+To use formatted citation, set Zotero default quick-copy format to a citation style first.
+
+If you want to switch to other formats, go to Settings.
+
+
+Error Message: %errorMessage%
+
+    )
+    return
+}
+else if (InStr(req.ResponseText, "No endpoint")) {
+    errorMessage := req.ResponseText 
+    MsgBox,, Error,
+    (
+
+Cannot connect to Better BibTeX for Zotero add-on. Install it and restart Zotero.
+
+See: https://retorque.re/zotero-better-bibtex/
+
+
+Error Message: %errorMessage%
+
     )
     return
 }
@@ -98,14 +131,14 @@ for index, value in rList
     Gui, 2: Add, DropDownList, vlocator%index% Choose9, %odtLocatorOptionsList%
     Gui, 2: Add, Edit,  vlocatorNumber%index% 
     }
-Gui,2: Add, Button, default, OK  ; The label ButtonOK (if it exists) will be run when the button is pressed.
+Gui,2: Add, Button, default, OK 
 Gui,2: Show,, Locator Information
-return  ; End of auto-execute section. The script is idle until the user does something.
+return  
 2GuiClose:
 Gui 2: Destroy
 return
 2ButtonOK:
-Gui,2: Submit  ; Save the input from the user to each control's associated variable.
+Gui,2: Submit  
 pList := []
 for index, value in rList
     {
@@ -125,31 +158,36 @@ for key, value in pList
     {
     citationStrings .= value
     }
-Gui,2: Destroy
 outputResult(citationStrings)
 return
 } else {
 outputResult(citationStrings)
+return
 }
+return
 
 outputResult(citationStrings) {
 global
+Clipboard := ""
 Clipboard := citationStrings
 ClipWait
+; WinActivate, %activeWindow%
+; WinWaitActive, %activeWindow%
 if (insertCheck = 1) 
     {
-    WinActivate, %activeWindow%
-    Sleep, 200
-    Send, ^v
     if (notificationCheck = 1)
     {
         TrayTip, Citation Inserted, %citationStrings%, 4,
-        Clipboard := tempClipboard
+
     }
+    Sleep, 500
+    Send, ^v
+    WinWait A
+    Clipboard := tempClipboard
 }else {
     if (notificationCheck = 1)
     {
-        TrayTip, Saved to Clipboard, %citationStrings%, 4,
+    TrayTip, Saved to Clipboard, %citationStrings%, 4,
     }
 }
 }
@@ -173,6 +211,7 @@ Requirement:
 
     1. Zotero For Window
     2. Better BibTeX for Zotero
+    3. RTF/ODF Scan for Zotero (for ODF format, optional)
 
 Bo An
 2019
@@ -186,8 +225,7 @@ readIni() {
     IniRead, currentShortcut, %iniFileName%, Settings, currentShortcut
     IniRead, locatorCheck, %iniFileName%, Settings, locatorCheck
     IniRead, insertCheck, %iniFileName%, Settings, insertCheck
-    IniRead, notificationCheck, %iniFileName%, Settings, notificationCheck
-    ; return currentFormat,currentShortcut, locatorCheck, insertCheck
+    IniRead, notificationCheck, %iniFileName%, Settings, notificationCheck    
 }
 
 formatShortcut(s){
@@ -268,7 +306,7 @@ openSettings(){
     Gui, Add, Text, x10, 
 
     Gui, Add, Text, w75 x10, Notification:
-    Gui, Add, Checkbox, x+25 vnotificationCheck %checkNotification%, Show Notification;
+    Gui, Add, Checkbox, x+25 vnotificationCheck %checkNotification%, Show Notification
     
     Gui, Add, Text, x10, 
 
@@ -285,14 +323,14 @@ openSettings(){
 
 
     Gui, Show,, Zotero Windows Picker Settings
-    return  ; End of auto-execute section. The script is idle until the user does something.
+    return  
 
     ButtonCancel:
     GuiClose:
     Gui, Destroy
     return
     ButtonSave:
-    Gui, Submit  ; Save the input from the user to each control's associated variable.
+    Gui, Submit  
     if(ctrlCheck){
         chosenShortcut .= "^"
     }
@@ -310,4 +348,25 @@ openSettings(){
     IniWrite, %notificationCheck%, %iniFileName%, Settings, notificationCheck
     MsgBox, Settings Saved.
     Reload
+}
+
+OnWin(Event, Hwnd)	
+{
+Static This_Func_Name := "OnWin"
+Static RunAtScriptExecution1 := DllCall( "RegisterShellHookWindow", UInt, A_ScriptHwnd)		
+Static SH_MsgNum := DllCall( "RegisterWindowMessage", Str,"SHELLHOOK" )
+Static RunAtScriptExecution2 := OnMessage(SH_MsgNum, Func(This_Func_Name), 1000)
+	; ((event = 32772) || (event = 4))
+    if (event = 1)
+	{
+	WinGetTitle, Title_Found, % "ahk_id" Hwnd	
+	
+	if (Title_Found = "Quick Format Citation")
+		{
+        IfWinNotActive, Quick Format Citation
+        {
+        WinActivate, Quick Format Citation
+        }
+        }
+	}
 }
