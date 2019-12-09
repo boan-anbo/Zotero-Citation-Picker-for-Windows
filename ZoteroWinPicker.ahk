@@ -16,6 +16,10 @@ odtLocatorOptions := {"Article":"art.","Chapter":"ch.","Subchapter":"subch.","Co
 
 IfNotExist, %iniFileName%
     {
+    MsgBox, ,Zotero Windows Picker, 
+    (
+        Initialize Settings
+    )
     currentFormat := "Zotero ODF Scan"
     currentShortcut := "^!F"
     locatorCheck := 1
@@ -47,6 +51,7 @@ Hotkey, %currentShortcut%, getRef
 return
 
 getRef:
+global tempClipboard := Clipboard
 IfWinNotExist, ahk_exe zotero.exe
 {
     MsgBox, , Zotero Not Found, Please Launch Zotero for Windows First.
@@ -138,12 +143,13 @@ if (insertCheck = 1)
     Send, ^v
     if (notificationCheck = 1)
     {
-        TrayTip, Citation Inserted & Saved to Clipboard, %citationStrings%, 20,
+        TrayTip, Citation Inserted, %citationStrings%, 4,
+        Clipboard := tempClipboard
     }
 }else {
     if (notificationCheck = 1)
     {
-        TrayTip, Saved to Clipboard, %citationStrings%, 20,
+        TrayTip, Saved to Clipboard, %citationStrings%, 4,
     }
 }
 }
@@ -251,7 +257,7 @@ openSettings(){
 
     Gui, Add, Text, x10, 
 
-    Gui, Add, Text, w75 x10, ODT Zotero Scan:
+    Gui, Add, Text, w75 x10, Zotero ODT Scan:
     Gui, Add, Checkbox, x+25 vlocatorCheck %checkLocator%, Input Locator Information (add informations like pages etc during insertion) 
     
     Gui, Add, Text, x10, 
@@ -268,20 +274,24 @@ openSettings(){
 
     Gui, Add, Text, x10, * Zotero Format Picker window might hide in the background when called for the first time.
 
-    Gui, Add, Link, x10, * For Zotero ODT Scan function instructions, see: <a href="https://zotero-odf-scan.github.io/zotero-odf-scan/">here.</a> 
+    Gui, Add, Link, x10, * For Zotero ODT Scan instructions, see: <a href="https://zotero-odf-scan.github.io/zotero-odf-scan/">here.</a> 
 
     Gui, Add, Text, x10, 
 
 
-    Gui, Add, Button, default, OK
+    Gui, Add, Button, w160 default, Save
+    Gui, Add, Button, w140 x+10, Cancel
+
+
 
     Gui, Show,, Zotero Windows Picker Settings
     return  ; End of auto-execute section. The script is idle until the user does something.
 
+    ButtonCancel:
     GuiClose:
     Gui, Destroy
     return
-    ButtonOK:
+    ButtonSave:
     Gui, Submit  ; Save the input from the user to each control's associated variable.
     if(ctrlCheck){
         chosenShortcut .= "^"
