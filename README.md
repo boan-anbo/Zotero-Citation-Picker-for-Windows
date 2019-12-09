@@ -38,7 +38,7 @@ Windows:
 
 5. Insert the citation(s) into the current active window or save to clipboard.
 
-![](img/odt_insert.png)
+![](img/insert_odt.png)
 
 6. Hover or right click the tray icon for more.
 
