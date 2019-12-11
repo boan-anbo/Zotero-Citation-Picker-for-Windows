@@ -11,12 +11,31 @@ Menu, Tray, Add, About, about
 Menu, Tray, Add
 Menu, Tray, Add, Exit, exit
 
-
+v = v.0.9.1
 iniFileName = ZoteroWindowsPicker.ini
 pickerWindowTitle = Quick Format Citation
 formatOptions := {"Latex":"latex","Biblatex":"biblatex","MultiMarkdown":"mmd","Pandoc":"pandoc","Zotero ODF Scan":"scannable-cite","Formatted Zotero Quick Citation":"formatted-citation","Formatted Zotero Quick Bibliography":"formatted-bibliography","JSON":"json"}
 odtLocatorOptions := {"Article":"art.","Chapter":"ch.","Subchapter":"subch.","Column":"col.","Figure":"fig.","Line":"l.","Note":"n.","Issue":"no.","Opus":"op.","Page":"p.","Paragraph":"para.","Subparagraph":"subpara.","Part":"pt.","Rule":"r.","Section":"sec.","Subsection":"subsec.","Section":"Sec.","Sub verbo":"sv.","Schedule":"sch.","Title":"tit.","Verse":"vrs.","Volume":"vol."}
 
+Start := A_TickCount
+loop, 26
+{
+letterList .= chr(A_Index + 64) . "|"
+}
+loop, 10
+{
+letterList .= chr(A_Index + 47) . "|"
+}
+loop, 12
+{
+letterList .= "F" . A_Index . "|"
+}
+for key, value in formatOptions
+{
+    formatOptionList .= key . "|"
+}
+letterListArray := StrSplit(letterList,"|")
+formatOptionListArray := StrSplit(formatOptionList,"|")
 
 IfNotExist, %iniFileName%
     {
@@ -34,6 +53,7 @@ IfNotExist, %iniFileName%
     readIni()
     }
 
+
 if (currentFormat = "Zotero ODF Scan")
 {
 for key, value in odtLocatorOptions
@@ -46,7 +66,18 @@ Menu, Tray, Tip , Format:`n     %currentFormat%`n`nShortcut:`n      %formatedSho
 
 currentFormatString := "format=" . formatOptions[currentFormat]
 requestString := "http://127.0.0.1:23119/better-bibtex/cayw?" . currentFormatString
-Hotkey, %currentShortcut%, getRef
+try{
+    Hotkey, %currentShortcut%, getRef
+} catch {
+    MsgBox, , Error,
+    (
+
+Error with %iniFileName% settings file. 
+
+Delete %iniFileName% and restart.
+
+    )
+}
 return
 
 getRef:
@@ -221,7 +252,7 @@ formatResult(r) {
 return
 
 About() {
-    MsgBox, , Zotero Windows Picker 0.9,
+    MsgBox, , Zotero Windows Picker %v%,
     (
 Requirement: 
 
@@ -238,11 +269,13 @@ Scripted in AHK.
 
 readIni() {
     global
+
     IniRead, currentFormat, %iniFileName%, Settings, currentFormat
     IniRead, currentShortcut, %iniFileName%, Settings, currentShortcut
     IniRead, locatorCheck, %iniFileName%, Settings, locatorCheck
     IniRead, insertCheck, %iniFileName%, Settings, insertCheck
     IniRead, notificationCheck, %iniFileName%, Settings, notificationCheck    
+
 }
 
 formatShortcut(s){
@@ -256,27 +289,11 @@ openSettings(){
     global
     IfWinExist, Zotero Windows Picker Settings
     {
-        WinActivate, Zotero Windows Picker Settings
+        ; WinActivate, Zotero Windows Picker Settings
         return
     }
-    Start := A_TickCount
-    loop, 26
-    {
-    letterList .= chr(A_Index + 64) . "|"
-    }
-    loop, 10
-    {
-    letterList .= chr(A_Index + 47) . "|"
-    }
-    loop, 12
-    {
-    letterList .= "F" . A_Index . "|"
-    }
 
-    for key, value in formatOptions
-    {
-        formatOptionList .= key . "|"
-    }
+
     IfExist, %iniFileName% 
         readIni()
     checkCtrl := InStr(currentShortcut, "^") ? "Checked" : ""
@@ -287,15 +304,13 @@ openSettings(){
     checkInsert := insertCheck ? "Checked" : ""
     checkNotification := notificationCheck ? "Checked": ""
 
-    letterListArray := StrSplit(letterList,"|")
-    formatOptionListArray := StrSplit(formatOptionList,"|")
     for index, value in letterListArray
         if (value = currentKeyChoice)
             checkKey := "Choose" . index
     for index, value in formatOptionListArray
         if (value = currentFormat)
             checkFormat := "Choose" . index
-
+    
     ; GUI for Settings
     Gui, Add, Text, w75 y10  , Hotkey:
     Gui, Add, Checkbox, w65 x+15 vctrlCheck %checkCtrl% , Ctrl 
@@ -337,8 +352,7 @@ openSettings(){
 
     Gui, Add, Button, w160 default, Save
     Gui, Add, Button, w140 x+10, Cancel
-    Gui, Add, Link, x+10 w130 Right, v0.9 by Bo An via <a href="https://www.autohotkey.com">AHK</a>.
-
+    Gui, Add, Link, x+10 w130 Right, %v% by Bo An via <a href="https://www.autohotkey.com">AHK</a>.
 
     Gui, Show,, Zotero Windows Picker Settings
     return  
@@ -349,6 +363,7 @@ openSettings(){
     return
     ButtonSave:
     Gui, Submit  
+    Gui, Destroy
     if(ctrlCheck){
         chosenShortcut .= "^"
     }
@@ -364,7 +379,21 @@ openSettings(){
     IniWrite, %locatorCheck%, %iniFileName%, Settings, locatorCheck
     IniWrite, %insertCheck%, %iniFileName%, Settings, insertCheck
     IniWrite, %notificationCheck%, %iniFileName%, Settings, notificationCheck
+    IfNotExist, %iniFileName%
+    {
+    MsgBox, , Error, 
+    (
+        
+        Cannot create %iniFileName% to save settings. 
+
+        Please run again as Administrator.
+
+    )
+    ExitApp
+
+    } else {
     MsgBox, Settings Saved
+    }
     Reload
 }
 
