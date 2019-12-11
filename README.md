@@ -55,6 +55,14 @@ Windows:
 * 0.9
     * First Version
 
+## Prior Work
+
+* On Windows:
+	* **[Zotero_scrivener_picker_windows](https://github.com/AmomentOfMusic/Zotero_scrivener_picker_windows)**
+
+* Other intergrations (vim, VS Code, Linux...):
+	* Refer to Better BibTex documentation: https://retorque.re/zotero-better-bibtex/citing/cayw/
+
 ## License
 
 The MIT License (MIT)
