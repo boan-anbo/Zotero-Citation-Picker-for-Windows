@@ -92,13 +92,13 @@ IfWinNotExist, ahk_exe zotero.exe
 }
 WinGetActiveTitle, activeWindow
 req := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-; req := ComObjCreate("Msxml2.ServerXMLHTTP")
+req.SetTimeouts(0, 60000, 30000, 120000)
 req.Open("GET", requestString, true)
 req.SetRequestHeader("Content-Type", "application/json")
 try 
 {    
 req.Send()
-req.WaitForResponse()
+req.WaitForResponse(120)
 } catch {
     WinClose, %pickerWindowTitle%
     return
