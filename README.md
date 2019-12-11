@@ -47,6 +47,10 @@ Windows:
 
 ![](img/tray_icon.png)
 
+## Possible Issue
+
+* For the settings to take effect, the app needs admin priviledge to write to an .ini file to store the settings. If you encounter this problem, run it as administrator. Or, download the default ZoteroWindowsPicker.ini (otherwise unnecessary) into the same folder and retry. 
+
 ## Release History
 
 * 0.9.1
