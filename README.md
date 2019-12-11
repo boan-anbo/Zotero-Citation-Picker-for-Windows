@@ -36,15 +36,22 @@ Windows:
 
 ![](img/look_up.png)
 
-5. Insert the citation(s) into the current active window or save to clipboard.
+5. When using ODT format, insert locator information, such as pages, chapters, etc.
+
+![](img/locator_info.png
+
+6. Insert the citation(s) into the current active window or save to clipboard instead.
 
 ![](img/insert_odt.png)
 
-6. Hover or right click the tray icon for more.
+7. Hover over or right click the tray icon for more.
 
 ![](img/tray_icon.png)
 
 ## Release History
+
+* 0.9.1
+    * Fixed admin priviledge notice. Longer picker window timeout.
 
 * 0.9
     * First Version
