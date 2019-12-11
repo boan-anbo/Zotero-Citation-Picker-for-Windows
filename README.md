@@ -2,7 +2,7 @@
 
 > An AHK-based windows application to search, pick, and insert Zotero citations.
 
-![](img/readme_icon.png)
+<p align="center">![](img/readme_icon.png)</p>
 
 
 
