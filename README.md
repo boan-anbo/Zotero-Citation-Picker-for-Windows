@@ -38,7 +38,7 @@ Windows:
 
 5. When using ODT format, insert locator information, such as pages, chapters, etc.
 
-![](img/locator_info.png
+![](img/locator_info.png)
 
 6. Insert the citation(s) into the current active window or save to clipboard instead.
 
