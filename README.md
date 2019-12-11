@@ -12,7 +12,7 @@ Windows:
 
 1. Install [Zotero](https://www.zotero.org/download/) for Windows.
 2. Install [Better BibTeX for Zotero](https://retorque.re/zotero-better-bibtex/installation/) add-on.
-3. Install [RTF/ODF-Scan for Zotero ](https://zotero-odf-scan.github.io/zotero-odf-scan/) add-on.
+3. Install [RTF/ODF-Scan for Zotero ](https://zotero-odf-scan.github.io/zotero-odf-scan/) add-on. Optional but recommended for live citations update.
 4. Download [Zotero Windows Picker](https://github.com/boan-anbo/Zotero-Citation-Picker-for-Windows/releases) and run the .exe,
 	* Or compile the .ahk file using [AutoHotkey](https://www.autohotkey.com/) compiler.
 
@@ -38,7 +38,7 @@ Windows:
 
 5. Insert the citation(s) into the current active window or save to clipboard.
 
-![](img/odt_insert.png)
+![](img/insert_odt.png)
 
 6. Hover or right click the tray icon for more.
 
