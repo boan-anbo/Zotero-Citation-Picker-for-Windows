@@ -1,6 +1,6 @@
 # Zotero Citation Picker for Windows
 
-> An AHK-based windows application to easily search, pick, and insert Zotero citations using keyboard shortcut.
+> An AHK-based windows application to easily search, pick, and insert Zotero citations using keyboard shortcuts.
 
 <div style="text-align:center"><img src="img/readme_icon.png" /></div>
 
