@@ -25,7 +25,7 @@ Windows:
 
 ## Usage
 
-1. Choose settings when ran for the first time.
+1. Choose initial setting for the first run. (If you don't need to manually input the pages numbers etc, turn off the "locator information" option.)
 
 ![](img/settings.png)
 
