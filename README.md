@@ -69,6 +69,4 @@ Windows:
 
 ## License
 
-The MIT License (MIT)
-
 2019 Bo An
