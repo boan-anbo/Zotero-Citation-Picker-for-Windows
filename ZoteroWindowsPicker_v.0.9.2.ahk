@@ -11,7 +11,7 @@ Menu, Tray, Add, About, about
 Menu, Tray, Add
 Menu, Tray, Add, Exit, exit
 
-v = v.0.9.1
+v = v.0.9.2
 iniFileName = ZoteroWindowsPicker.ini
 pickerWindowTitle = Quick Format Citation
 formatOptions := {"Latex":"latex","Biblatex":"biblatex","MultiMarkdown":"mmd","Pandoc":"pandoc","Zotero ODF Scan":"scannable-cite","Formatted Zotero Quick Citation":"formatted-citation","Formatted Zotero Quick Bibliography":"formatted-bibliography","JSON":"json"}
@@ -45,7 +45,7 @@ IfNotExist, %iniFileName%
     )
     currentFormat := "Formatted Zotero Quick Bibliography"
     currentShortcut := "+!F"
-    locatorCheck := 1
+    locatorCheck := 0
     insertCheck := 1
     notificationCheck := 1
     openSettings()
@@ -203,15 +203,27 @@ for index, value in rList
         value := RegExReplace(value, "\|", locatorString,, 1, InStr(value, "|",,, 2))
         pList.Push(value)
     }
+    ; Add an alternative if the user it not inputing any page numbers 
+    else {
+        locatorString := "|"
+        value := RegExReplace(value, "\|", locatorString,, 1, InStr(value, "|",,, 2))
+        pList.Push(value)
+    }
     }
 citationStrings := ""
 for key, value in pList
     {
     citationStrings .= value
     }
-outputResult(citationStrings)
+    outputResult(citationStrings)
 return
-} else {
+} else if (currentFormat = "Pandoc") {
+    ; Added '[' ']' around Pandoc format output.
+    citationStrings := "[" . citationStrings . "]"
+    outputResult(citationStrings)
+    return
+}
+else {
 outputResult(citationStrings)
 return
 }
@@ -262,7 +274,7 @@ Requirement:
 
 
 Bo An
-2019
+2019-20
 Scripted in AHK.
     )
 }
