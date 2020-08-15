@@ -1,9 +1,8 @@
 # Zotero Citation Picker for Windows
 
-> An AHK-based windows application to search, pick, and insert Zotero citations.
+> An AHK-based windows application to easily search, pick, and insert Zotero citations using keyboard shortcuts.
 
-![](img/readme_icon.png)
-
+<div style="text-align:center"><img src="img/readme_icon.png" /></div>
 
 
 ## Installation
@@ -26,7 +25,7 @@ Windows:
 
 ## Usage
 
-1. Choose settings when ran for the first time.
+1. Choose initial setting for the first run. (If you don't need to manually input the pages numbers etc, turn off the "locator information" option.)
 
 ![](img/settings.png)
 
@@ -36,27 +35,38 @@ Windows:
 
 ![](img/look_up.png)
 
-5. Insert the citation(s) into the current active window or save to clipboard.
+5. When using ODT format, insert locator information, such as pages, chapters, etc.
+
+![](img/locator_info.png)
+
+6. Insert the citation(s) into the current active window or save to clipboard instead.
 
 ![](img/insert_odt.png)
 
-6. Hover or right click the tray icon for more.
+7. Hover over or right click the tray icon for more.
 
 ![](img/tray_icon.png)
 
+## Possible Issue
+
+* For the settings to take effect, the app needs admin priviledge to write to an .ini file to store the settings. If you encounter this problem, run it as administrator. Or, download the default ZoteroWindowsPicker.ini (otherwise unnecessary) into the same folder and retry. 
+
 ## Release History
+
+* 0.9.1
+    * Fixed admin priviledge notice. Longer picker window timeout.
 
 * 0.9
     * First Version
 
+## Prior Work
+
+* On Windows:
+	* **[Zotero_scrivener_picker_windows](https://github.com/AmomentOfMusic/Zotero_scrivener_picker_windows)**
+
+* Other intergrations (vim, VS Code, Linux...):
+	* Refer to Better BibTex documentation: https://retorque.re/zotero-better-bibtex/citing/cayw/
+
 ## License
 
-The MIT License (MIT)
-
-Copyright (c) 2019 Bo An
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+2019 Bo An
