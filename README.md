@@ -4,6 +4,18 @@
 
 <div style="text-align:center"><img src="img/readme_icon.png" /></div>
 
+## Update History
+
+* 0.9.2  
+    * Added '[' ']' around Pandoc format output entries, e.g. `[@latourInquiryModesExistence2013]`
+.
+    * Allow blank on locator (e.g. page) on ODT format. You can just press enter and not put in any page number now.
+
+* 0.9.1
+    * Fixed admin priviledge notice. Longer picker window timeout.
+
+* 0.9
+    * First Version
 
 ## Installation
 
@@ -51,14 +63,6 @@ Windows:
 
 * For the settings to take effect, the app needs admin priviledge to write to an .ini file to store the settings. If you encounter this problem, run it as administrator. Or, download the default ZoteroWindowsPicker.ini (otherwise unnecessary) into the same folder and retry. 
 
-## Release History
-
-* 0.9.1
-    * Fixed admin priviledge notice. Longer picker window timeout.
-
-* 0.9
-    * First Version
-
 ## Prior Work
 
 * On Windows:
@@ -69,4 +73,4 @@ Windows:
 
 ## License
 
-2019 Bo An
+2019-20 Bo An
